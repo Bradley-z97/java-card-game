@@ -13,8 +13,10 @@ public class CardPack {
      * Adds  cards to get deck (values 1-n)
      * and then shuffles them.
      * 
-     * Not sure if we use cards 1-n or traditional
-     * card values (maybe 1-10)?
+     * This is wrong, needs to be cards in range of 2n.
+     * so 1 to 2n, repeated 4 times. that way every player can have a chance
+     * at winning (4 of the same card)
+     * 
      */
     public void initialisePack() {
         for (i = 0; i < packSize; i++) {
@@ -22,5 +24,6 @@ public class CardPack {
             this.cards.add(c);
         }
         Collections.shuffle(cards);
+
     }
 } 
