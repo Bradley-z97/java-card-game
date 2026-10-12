@@ -3,8 +3,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class CardGame {
+    private int numPlayers;
+    private String filepath;
+    
     public static void main(String[] args) {
         // TODO: main method implementation
+        String packLocation;
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter the number of players: ");
 
@@ -13,14 +17,17 @@ public class CardGame {
 
         while (true) {
             System.out.println("Please enter location of pack to load: ");
-            String packLocation = scanner.nextLine();
+            packLocation = scanner.nextLine();
             if (isValidPack(packLocation, numPlayers)) {
                 break;
             } else {
                 System.out.println("Invalid pack. Please try again");
             }
             }
-        };
+        
+        CardPack pack = new CardPack(numPlayers, packLocation);
+        pack.initialisePack(packLocation);
+    }
 
     public static boolean isValidPack(String filepath, int numPlayers) {
         int lineCount = 0;
@@ -46,5 +53,7 @@ public class CardGame {
                 return false;
             }
         return lineCount == 8 * numPlayers;
+
     }
+
 }

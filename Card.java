@@ -1,7 +1,10 @@
-public class Card {
-    private final int number; // immutable value
+import java.util.concurrent.atomic.AtomicInteger;
 
-    public Card(int number) {
+public class Card {
+
+    private final AtomicInteger number; // immutable value
+
+    public Card(AtomicInteger number) {
         this.number = number;
     }
 }

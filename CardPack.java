@@ -1,29 +1,33 @@
 import java.util.List;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CardPack {
-    private int packSize;
-    private List<Card> cards;
+    private List<Card> pack;
+    private int numPlayers;
+    private String filepath;
 
-    public CardPack(int numPlayers) {
-        this.packSize = 8 * numPlayers;
+    public CardPack(int numPlayers, String filepath) {
+        this.numPlayers = numPlayers;
+        this.filepath = filepath;
+        this.pack = new ArrayList<>();
     }
 
-    /**
-     * Adds  cards to get deck (values 1-n)
-     * and then shuffles them.
-     * 
-     * This is wrong, needs to be cards in range of 2n.
-     * so 1 to 2n, repeated 4 times. that way every player can have a chance
-     * at winning (4 of the same card)
-     * 
-     */
-    public void initialisePack() {
-        for (i = 0; i < packSize; i++) {
-            Card c = new Card(i);
-            this.cards.add(c);
-        }
-        Collections.shuffle(cards);
+    public void initialisePack(String filepath) {
+        File file = new File(filepath);
 
+        try(Scanner scanner = new Scanner(file);) {
+            while (scanner.hasNextInt()) {
+            AtomicInteger num = new AtomicInteger(scanner.nextInt());
+            
+            Card card = new Card(num);
+            pack.add(card);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found!");
+        }    
     }
-} 
+}
