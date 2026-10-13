@@ -1,3 +1,12 @@
+/**
+ * The Player class constantly takes cards from the 'adding deck',
+ * and discards to the 'removing' deck. This is passed to each thread
+ * as an argument upon creation, as each player takes and discards 
+ * to/from different decks.
+ * 
+ * A player's only job is to take/discard cards, thread safety is
+ * handled inside the {@link Deck} class where the shared mutable state lies. 
+ */
 public class Player implements Runnable {
     private int playerId;
     private List<Card> hand = new ArrayList<>();
@@ -10,6 +19,12 @@ public class Player implements Runnable {
         this.removingDeck = removingDeck;
     }
 
+    /**
+     * Method that makes the player take cards from the deck
+     * to the left and discard to the deck on the right. 
+     * 
+     * The methods acting on {@link Deck} are synchronized so is thread safe.
+     */
     @Override
     public void run() {
         boolean winner = false;
@@ -30,6 +45,13 @@ public class Player implements Runnable {
         hand.add(card);
     }
 
+    /**
+     * Finds and removes the first card that doesn't match the player's
+     * preference (the same value as their player ID).
+     * 
+     * @return the discarded {@link Card}, or null if cards are all the
+     * preferred value, meaning player has won. 
+     */
     public Card removeCard() {
         List<Integer> valueList = new ArrayList<>();
         
