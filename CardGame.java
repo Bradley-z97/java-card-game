@@ -9,6 +9,7 @@ public class CardGame {
     public static void main(String[] args) {
         // TODO: main method implementation
         String packLocation;
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter the number of players: ");
 
@@ -29,6 +30,11 @@ public class CardGame {
         pack.initialisePack(packLocation);
     }
 
+    /**
+     * helper function that checks the validity of a txt file by making
+     * sure the file exists, there are no negative values, and that
+     * there are enough lines to satisfy the 8n pack size rule.
+     */
     public static boolean isValidPack(String filepath, int numPlayers) {
         int lineCount = 0;
         try {
@@ -53,7 +59,5 @@ public class CardGame {
                 return false;
             }
         return lineCount == 8 * numPlayers;
-
     }
-
 }
