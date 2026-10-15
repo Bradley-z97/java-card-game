@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Queue;
+import java.util.ArrayDeque;
 
 public class CardPack {
     private Queue<Card> pack;
@@ -14,7 +15,7 @@ public class CardPack {
     public CardPack(int numPlayers, String filepath) {
         this.numPlayers = numPlayers;
         this.filepath = filepath;
-        this.pack = new Queue<>();
+        this.pack = new ArrayDeque<>();
     }
 
     public void initialisePack(String filepath) {
@@ -22,7 +23,7 @@ public class CardPack {
 
         try(Scanner scanner = new Scanner(file);) {
             while (scanner.hasNextInt()) {
-            Integer num = new Integer(scanner.nextInt());
+            Integer num = scanner.nextInt();
             
             Card card = new Card(num);
             pack.add(card);

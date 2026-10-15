@@ -1,16 +1,27 @@
 import java.util.Queue;
-import java.util.ArrayDequeue;
+import java.util.ArrayDeque;
 import java.lang.StringBuilder;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileWriter;
 
 public class Deck {
     private final int deckId; // Given upon creation, sequential. ie: 1,2,3,4...n
     private Queue<Card> deckCards;
+    private File deckOutputText;
 
     // methods need to be protected from race conditions etc
     // Done synchronized for now, but maybe something else ??
     public Deck(int deckId) {
-        this.deckCards = new ArrayDequeue<>();
+        this.deckCards = new ArrayDeque<>();
         this.deckId = deckId;
+        this.deckOutputText = new File("deck" + deckId + "_output.txt");
+        
+        try{
+            deckOutputText.createNewFile();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+        }
     }
     
     public synchronized Card takeFromDeck() {

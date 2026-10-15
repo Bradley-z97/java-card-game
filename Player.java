@@ -19,12 +19,15 @@ public class Player implements Runnable {
     private Deck addingDeck;
     private Deck removingDeck;
     private File textFile;
+    private final GameState gameState;
+    private static volatile boolean winner = false;
 
-    public Player(int playerId, Deck addingDeck, Deck removingDeck) {
+    public Player(int playerId, Deck addingDeck, Deck removingDeck, GameState gameState) {
         this.playerId = playerId;
         this.addingDeck = addingDeck;
         this.removingDeck = removingDeck;
-        this.textFile = new File("Player"+playerId+".txt");
+        this.gameState = gameState;
+        this.textFile = new File("Player" + playerId + ".txt");
 
         try {
             textFile.createNewFile();
@@ -42,20 +45,29 @@ public class Player implements Runnable {
      */
     @Override
     public void run() {
-        boolean winner = false;
         try (FileWriter writer = new FileWriter(textFile, true)) {
             // Keeps playing until winner is found
-            while (!winner) {
-                // Build current hand string 
+            while (!gameState.hasWinner(this)) {
+                if (gameState.isWon()) {
+                    writer.write("Player " + gameState.getWinnerId() +
+                                 " has informed player " + playerId + 
+                                 " that player " + gameState.getWinnerId() + 
+                                 " has won\n");
+                    winner = true; // volatile flag set to true
+                    break;
+                }
+
+                // Build current hand string
                 StringBuilder currentHand = new StringBuilder();
                 for (Card card : hand) {
-                    currentHand.append(card.getCardValue());
+                    currentHand.append(card.getCardValue().toString());
                     currentHand.append(" ");
                 }
 
                 // write current hand to txt file
                 writer.write("Player " + playerId +
-                             " current hand is " + currentHand);
+                             " current hand is " + currentHand + 
+                             "\n");
 
                 // write card 'n' taken from deck 'x' to file
                 Card cardTaken = addingDeck.takeFromDeck();
@@ -66,22 +78,20 @@ public class Player implements Runnable {
                              "\n");
             
                 Card discardedCard = this.removeCard();
-                // check if player has won
-                if (discardedCard == null) {
-                    winner = true;
-                } else {
-                    // discard a card from hand and write to txt file
-                    removingDeck.insertCard(discardedCard);
-                    writer.write("Player " + playerId +
-                                 " discards a " + discardedCard.getCardValue() +
-                                 " from deck " + removingDeck.getDeckId() +
-                                 "\n");
-                }
+
+                removingDeck.insertCard(discardedCard);
+                writer.write("Player " + playerId +
+                             " discards a " + discardedCard.getCardValue() +
+                             " from deck " + removingDeck.getDeckId() +
+                             "\n");
             }
+
+
         } catch (IOException e) {
             System.out.println("An error occurred.");
         }
     }
+
 
     public void addToHand(Card card) {
         hand.add(card);
@@ -95,15 +105,18 @@ public class Player implements Runnable {
      * preferred value, meaning player has won. 
      */
     public Card removeCard() {
-        List<Integer> valueList = new ArrayList<>();
-        
-        hand.forEach( (card) -> { valueList.add(card.getCardValue()); });
-
         for (int i = 0; i < hand.size(); i++) {
-            if (valueList.get(i) == playerId) continue;
+            if (hand.get(i).getCardValue() == playerId) continue;
             return hand.remove(i);
         }
+        return null; // if removeCard returns null, all cards == playerId
+    }
 
-        return null; // if removeCard returns null, all cards == playerId, player wins
+    public List<Card> getHand() {
+        return hand;
+    }
+
+    public int getPlayerId() {
+        return playerId;
     }
 }
