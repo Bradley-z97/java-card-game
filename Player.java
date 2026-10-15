@@ -1,3 +1,9 @@
+import java.io.FileWriter;
+import java.io.File;
+import java.io.IOException;
+import java.lang.StringBuilder;
+import java.util.List;
+import java.util.ArrayList;
 /**
  * The Player class constantly takes cards from the 'adding deck',
  * and discards to the 'removing' deck. This is passed to each thread
@@ -12,11 +18,20 @@ public class Player implements Runnable {
     private List<Card> hand = new ArrayList<>();
     private Deck addingDeck;
     private Deck removingDeck;
+    private File textFile;
 
     public Player(int playerId, Deck addingDeck, Deck removingDeck) {
         this.playerId = playerId;
         this.addingDeck = addingDeck;
         this.removingDeck = removingDeck;
+        this.textFile = new File("Player"+playerId+".txt");
+
+        try {
+            textFile.createNewFile();
+        }
+        catch (IOException e) {
+            System.out.println("An error occurred.");
+        }
     }
 
     /**
@@ -28,16 +43,43 @@ public class Player implements Runnable {
     @Override
     public void run() {
         boolean winner = false;
+        try (FileWriter writer = new FileWriter(textFile, true)) {
+            // Keeps playing until winner is found
+            while (!winner) {
+                // Build current hand string 
+                StringBuilder currentHand = new StringBuilder();
+                for (Card card : hand) {
+                    currentHand.append(card.getCardValue());
+                    currentHand.append(" ");
+                }
 
-        while (!winner) {
+                // write current hand to txt file
+                writer.write("Player " + playerId +
+                             " current hand is " + currentHand);
 
-            this.addToHand(addingDeck.takeFromDeck());
+                // write card 'n' taken from deck 'x' to file
+                Card cardTaken = addingDeck.takeFromDeck();
+                this.addToHand(cardTaken);
+                writer.write("Player " + playerId +
+                             " draws a " + cardTaken.getCardValue() +
+                             " from deck " + addingDeck.getDeckId() +
+                             "\n");
             
-            Card discardedCard = this.removeCard();
-
-            if (discardedCard == null) {
-                winner = true;
-            } else removingDeck.insertCard(discardedCard);
+                Card discardedCard = this.removeCard();
+                // check if player has won
+                if (discardedCard == null) {
+                    winner = true;
+                } else {
+                    // discard a card from hand and write to txt file
+                    removingDeck.insertCard(discardedCard);
+                    writer.write("Player " + playerId +
+                                 " discards a " + discardedCard.getCardValue() +
+                                 " from deck " + removingDeck.getDeckId() +
+                                 "\n");
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
         }
     }
 
