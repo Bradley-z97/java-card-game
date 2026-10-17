@@ -48,9 +48,9 @@ public class Deck {
     }
 
     public void writeToTextFile() {
-        try (FileWriter writer = new FileWriter(deckOutputText, true)) {
+        try (FileWriter writer = new FileWriter(deckOutputText, false)) {
             if (gameState.isWon()) {
-                writer.write("deck" + deckId + " contents: " + deckCards);
+                writer.write("deck" + deckId + " contents: " + getDeckContents());
             } 
         } catch (IOException e) {
             System.out.println("An error occurred.");

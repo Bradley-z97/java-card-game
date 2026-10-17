@@ -1,8 +1,11 @@
 public class GameState {
-    private boolean won;
+    private volatile boolean won = false;
     private int winnerId = -1;
 
     public boolean hasWinner(Player player) {
+        if (player.getHand().size() != 4) {
+            return false;
+        }
         for (Card card : player.getHand()) {
             if (!(card.getCardValue() == player.getPlayerId())) return false;
         }
