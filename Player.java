@@ -53,6 +53,10 @@ public class Player implements Runnable {
                                  " has informed player " + playerId + 
                                  " that player " + gameState.getWinnerId() + 
                                  " has won\n");
+                    writer.write("Player " + playerId +
+                                 " exits\n");
+                    System.out.println("Player " + gameState.getWinnerId() +
+                                       " wins");
                     winner = true; // volatile flag set to true
                     break;
                 }
