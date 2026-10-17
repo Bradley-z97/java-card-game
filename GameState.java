@@ -1,6 +1,6 @@
 public class GameState {
-    private boolean won;
-    private int winnerId = -1;
+    private volatile boolean won;
+    private volatile int winnerId = -1;
 
     public boolean hasWinner(Player player) {
         for (Card card : player.getHand()) {

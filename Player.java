@@ -20,7 +20,6 @@ public class Player implements Runnable {
     private Deck removingDeck;
     private File textFile;
     private final GameState gameState;
-    private static volatile boolean winner = false;
 
     public Player(int playerId, Deck addingDeck, Deck removingDeck, GameState gameState) {
         this.playerId = playerId;
@@ -46,27 +45,20 @@ public class Player implements Runnable {
     @Override
     public void run() {
         try (FileWriter writer = new FileWriter(textFile, true)) {
+            writer.write("Player " + playerId +
+                         " initial hand " + this.getPlayerHandAsString() + "\n");
+            
             // Keeps playing until winner is found
-            while (!gameState.hasWinner(this)) {
-                if (gameState.isWon()) {
-                    writer.write("Player " + gameState.getWinnerId() +
-                                 " has informed player " + playerId + 
-                                 " that player " + gameState.getWinnerId() + 
-                                 " has won\n");
-                    writer.write("Player " + playerId +
-                                 " exits\n");
+            while (!gameState.isWon()) {
+                // if this thread has won
+                if (gameState.hasWinner(this)) {
+                    writer.write("Player " + playerId + " wins.\n");
                     System.out.println("Player " + gameState.getWinnerId() +
                                        " wins");
-                    winner = true; // volatile flag set to true
-                    break;
+                    break; // writes exit and final hand message outside of the loop
                 }
 
-                // Build current hand string
-                StringBuilder currentHand = new StringBuilder();
-                for (Card card : hand) {
-                    currentHand.append(card.getCardValue().toString());
-                    currentHand.append(" ");
-                }
+                String currentHand = this.getPlayerHandAsString();
 
                 // write current hand to txt file
                 writer.write("Player " + playerId +
@@ -90,6 +82,19 @@ public class Player implements Runnable {
                              "\n");
             }
 
+            int winnerId = gameState.getWinnerId();
+
+            if (winnerId != playerId) {
+                writer.write("Player " + winnerId +
+                             " has informed player " + playerId +
+                             " that player " + winnerId +
+                             " has won\n");
+            }
+             // runs for every player once game ends
+            writer.write("Player " + playerId + " exits\n");
+
+            writer.write("Player " + playerId + " final hand: " +
+                         getPlayerHandAsString() + "\n");
 
         } catch (IOException e) {
             System.out.println("An error occurred.");
@@ -122,5 +127,14 @@ public class Player implements Runnable {
 
     public int getPlayerId() {
         return playerId;
+    }
+
+    public String getPlayerHandAsString() {
+        StringBuilder sb = new StringBuilder();
+        for (Card card : hand) {
+            sb.append(card.getCardValue().toString());
+            sb.append(" ");
+        }
+        return sb.toString();
     }
 }
