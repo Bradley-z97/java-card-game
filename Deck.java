@@ -9,14 +9,16 @@ public class Deck {
     private final int deckId; // Given upon creation, sequential. ie: 1,2,3,4...n
     private Queue<Card> deckCards;
     private File deckOutputText;
+    private final GameState gameState;
 
     // methods need to be protected from race conditions etc
     // Done synchronized for now, but maybe something else ??
-    public Deck(int deckId) {
+    public Deck(int deckId, GameState gameState) {
         this.deckCards = new ArrayDeque<>();
         this.deckId = deckId;
         this.deckOutputText = new File("deck" + deckId + "_output.txt");
-        
+        this.gameState = gameState;
+
         try{
             deckOutputText.createNewFile();
         } catch (IOException e) {
@@ -43,5 +45,15 @@ public class Deck {
             sb.append(" ");
         }
         return sb.toString();
+    }
+
+    public void writeToTextFile() {
+        try (FileWriter writer = new FileWriter(deckOutputText, true)) {
+            if (gameState.isWon()) {
+                writer.write("deck" + deckId + " contents: " + deckCards);
+            } 
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+        }
     }
 }
