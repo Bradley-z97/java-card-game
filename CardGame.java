@@ -73,6 +73,9 @@ public class CardGame {
                 return;
             }
         }
+        for (int i = 0; i < numPlayers; i++) {
+            decks[i].writeToTextFile();
+        }
         
 
 }

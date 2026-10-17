@@ -56,4 +56,8 @@ public class Deck {
             System.out.println("An error occurred.");
         }
     }
+
+    public synchronized int size() {
+        return deckCards.size();
+    }   
 }
