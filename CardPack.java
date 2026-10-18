@@ -32,4 +32,8 @@ public class CardPack {
             System.out.println("File not found!");
         }
     }
+
+    public Card takeCard() {
+        return pack.poll();
+    }
 }
