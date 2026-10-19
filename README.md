@@ -11,6 +11,9 @@ where n is the number of players)
 type into the terminal:
 java CardGame
 
+To run the executable jar file, open the terminal and type:
+java -jar cards.jar
+
 ## Running the Tests
 
 The tests are written in JUnit 5 and are located in the folder, 'test'
