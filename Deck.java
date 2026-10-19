@@ -47,7 +47,7 @@ public class Deck {
 
     public void writeToTextFile() {
         try (FileWriter writer = new FileWriter(deckOutputText, false)) {
-            if (gameState.isWon()) {
+            if (gameState.isWon()) { // Checks the game is finished, and if it is, it writes to the txt file the deck contents
                 writer.write("deck" + deckId + " contents: " + getDeckContents());
             } 
         } catch (IOException e) {
@@ -55,6 +55,7 @@ public class Deck {
         }
     }
 
+    // Returns the size of the deck
     public synchronized int size() {
         return deckCards.size();
     }   

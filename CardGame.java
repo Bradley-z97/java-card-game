@@ -9,6 +9,7 @@ public class CardGame {
     public static void main(String[] args) {
         String packLocation;
 
+        // Asks for an input for the number of players and the location of the pack
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter the number of players: ");
 
@@ -18,13 +19,16 @@ public class CardGame {
         while (true) {
             System.out.println("Please enter location of pack to load: ");
             packLocation = scanner.nextLine();
+            // Checks the pack is a valid pack
             if (isValidPack(packLocation, numPlayers)) {
                 break;
             } else {
+                // If the pack is invalid, print this line and ask for new input pack
                 System.out.println("Invalid pack. Please try again");
             }
-            }
+        }
         
+        //  Initialise a pack from the CardPack class
         CardPack pack = new CardPack(numPlayers, packLocation);
         pack.initialisePack(packLocation);
 
@@ -71,6 +75,7 @@ public class CardGame {
             threads[i].start();
         }
 
+        // Makes the threads wait for one another with the join() keyword
         for (int i = 0; i < numPlayers; i++) {
             try {
                 threads[i].join();

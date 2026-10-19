@@ -7,14 +7,19 @@ public class DeckTest {
     @Test
     @DisplayName("Tesing FIFO deck behaviour")
     public void testFIFO() {
+
         GameState gameState = new GameState();
+
+        // Create 1 deck
         Deck deck = new Deck(1, gameState);
 
+        // Add new cards to the deck
         deck.insertCard(new Card(4));
         deck.insertCard(new Card(7));
         deck.insertCard(new Card(3));
         deck.insertCard(new Card(2));
 
+        // Check the deck returns the values in a FIFO behaviour
         assertEquals(4, deck.takeFromDeck().getCardValue());
         assertEquals(7, deck.takeFromDeck().getCardValue());
         assertEquals(3, deck.takeFromDeck().getCardValue());

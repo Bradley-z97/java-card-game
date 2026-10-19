@@ -12,6 +12,7 @@ public class CardGameTest {
     public void testGameEndsCleanly() throws InterruptedException {
         GameState gameState = new GameState();
 
+        // Create two decks for test
         Deck deck1 = new Deck(1, gameState);
         Deck deck2 = new Deck(2, gameState);
 

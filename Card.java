@@ -6,6 +6,7 @@ public class Card {
         this.number = number;
     }
 
+    //Return the integer value of the card
     public Integer getCardValue() {
         return number;
     }

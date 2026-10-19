@@ -22,16 +22,19 @@ public class CardPack {
 
         try(Scanner scanner = new Scanner(file);) {
             while (scanner.hasNextInt()) {
-            Integer num = scanner.nextInt();
+                // Checks that there is another integer in the file and while there it adds
+                // that card to the pack
+                Integer num = scanner.nextInt();
             
-            Card card = new Card(num);
-            pack.add(card);
+                Card card = new Card(num);
+                pack.add(card);
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
         }
     }
 
+    // Card gets popped from the pack
     public Card takeCard() {
         return pack.poll();
     }
