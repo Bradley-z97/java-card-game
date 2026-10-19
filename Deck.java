@@ -11,8 +11,6 @@ public class Deck {
     private File deckOutputText;
     private final GameState gameState;
 
-    // methods need to be protected from race conditions etc
-    // Done synchronized for now, but maybe something else ??
     public Deck(int deckId, GameState gameState) {
         this.deckCards = new ArrayDeque<>();
         this.deckId = deckId;

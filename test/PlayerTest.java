@@ -45,16 +45,15 @@ public class PlayerTest {
         removingDeck.insertCard(new Card(3));
 
         int initialCount = player.getHand().size() + addingDeck.size() + removingDeck.size();
-        Card drawnCard = removingDeck.takeFromDeck();
+        Card drawnCard = addingDeck.takeFromDeck();
         player.addToHand(drawnCard);
 
         Card discardCard = player.removeCard();
-        addingDeck.insertCard(discardCard);
+        removingDeck.insertCard(discardCard);
 
         int finalCount = player.getHand().size() + addingDeck.size() + removingDeck.size();
 
         assertEquals(initialCount, finalCount);
     }
 
-    
 }

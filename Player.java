@@ -78,7 +78,7 @@ public class Player implements Runnable {
                 removingDeck.insertCard(discardedCard);
                 writer.write("Player " + playerId +
                              " discards a " + discardedCard.getCardValue() +
-                             " from deck " + removingDeck.getDeckId() +
+                             " to deck " + removingDeck.getDeckId() +
                              "\n");
             }
 

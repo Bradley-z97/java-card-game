@@ -7,7 +7,6 @@ public class CardGame {
     private String filepath;
     
     public static void main(String[] args) {
-        // TODO: main method implementation
         String packLocation;
 
         Scanner scanner = new Scanner(System.in);
@@ -30,11 +29,14 @@ public class CardGame {
         pack.initialisePack(packLocation);
 
         GameState gameState = new GameState();
+
+        // Create decks and store them in a list
         Deck[] decks = new Deck[numPlayers];
         for (int i = 0; i < numPlayers; i++) {
             decks[i] = new Deck(i + 1, gameState);
         }
 
+        // Create players and store them in a list
         Player[] players = new Player[numPlayers];
         for (int i = 0; i < numPlayers; i++) {
             if (i == numPlayers - 1) {
@@ -44,6 +46,7 @@ public class CardGame {
             }
         }
 
+        // Deal cards to players 
         for (int round = 0; round < 4; round++) {
             for(int i = 0; i < numPlayers; i++) {
                 Card card = pack.takeCard();
@@ -51,6 +54,7 @@ public class CardGame {
             }
         }
 
+        // Deal cards to decks
         for (int round = 0; round < 4; round++) {
             for (int i = 0; i < numPlayers; i++) {
                 Card card = pack.takeCard();
@@ -58,6 +62,7 @@ public class CardGame {
             }
         }
 
+        // Create threads in an array and start each one
         Thread[] threads = new Thread[numPlayers];
         for (int i = 0; i < numPlayers; i++) {
             threads[i] = new Thread(players[i]);
@@ -65,6 +70,7 @@ public class CardGame {
         for (int i = 0; i < numPlayers; i++) {
             threads[i].start();
         }
+
         for (int i = 0; i < numPlayers; i++) {
             try {
                 threads[i].join();
@@ -76,10 +82,7 @@ public class CardGame {
         for (int i = 0; i < numPlayers; i++) {
             decks[i].writeToTextFile();
         }
-        
-
 }
-
 
     /**
      * helper function that checks the validity of a txt file by making
